@@ -1,7 +1,8 @@
 <template>
   <div class="posts">
     <h1>Posts</h1>
-    <div v-if="posts.length > 0" class="table-wrap">
+      <h2>Total count {{ count }}</h2>
+      <div v-if="posts.length > 0" class="table-wrap">
       <div>
         <router-link v-bind:to="{ name: 'NewPost' }" class="">Add Post</router-link>
       </div>
@@ -16,7 +17,7 @@
           <td>{{ post.description }}</td>
           <td align="center">
             <router-link v-bind:to="{ name: 'EditPost', params: { id: post._id } }">Edit</router-link> |
-            <a href="#">Delete</a>
+            <a href="#" @click="deletePost(post)">Delete</a>
           </td>
         </tr>
       </table>
@@ -34,7 +35,8 @@ export default {
   name: 'posts',
   data () {
     return {
-      posts: []
+      posts: [],
+      count: 0
     }
   },
   mounted () {
@@ -44,6 +46,16 @@ export default {
     async getPosts () {
       const response = await PostsService.fetchPosts()
       this.posts = response.data.posts
+      this.getPostCount()
+    },
+    async deletePost (post) {
+      await PostsService.deletePost(post._id)
+      this.getPosts()
+      this.$router.push({ name: 'Posts' })
+    },
+    async getPostCount () {
+      const response = await PostsService.getPostCount()
+      this.count = response.data.count
     }
   }
 }
@@ -84,4 +96,3 @@ a.add_post_link {
   font-weight: bold;
 }
 </style>
-
