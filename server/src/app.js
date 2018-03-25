@@ -61,7 +61,7 @@ app.get('/post/:id', (req, res) => {
 
 // Update a post
 
-app.put('/posts/:id', (req, res) =>{
+app.put('/posts/:id', (req, res) => {
   const db = req.db
   Post.findById(req.params.id, 'title description', function(error, post){
     if(error) { console.error(error) }

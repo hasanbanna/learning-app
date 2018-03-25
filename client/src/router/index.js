@@ -3,12 +3,16 @@ import Router from 'vue-router'
 import Posts from '../components/Posts'
 import NewPost from '../components/NewPost'
 import EditPost from '../components/EditPost'
-
+import Main from '../components/Main'
 Vue.use(Router)
 
 export default new Router({
-  mode: 'history',
   routes: [
+    {
+      path: '/',
+      name: 'Main',
+      component: Main
+    },
     {
       path: '/posts',
       name: 'Posts',
