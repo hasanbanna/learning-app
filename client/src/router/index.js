@@ -1,9 +1,8 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import Posts from '../components/Posts'
-import NewPost from '../components/NewPost'
-import EditPost from '../components/EditPost'
 import Main from '../components/Main'
+import Study from '../components/Study'
+
 Vue.use(Router)
 
 export default new Router({
@@ -14,19 +13,9 @@ export default new Router({
       component: Main
     },
     {
-      path: '/posts',
-      name: 'Posts',
-      component: Posts
-    },
-    {
-      path: '/posts/new',
-      name: 'NewPost',
-      component: NewPost
-    },
-    {
-      path: '/posts/:id',
-      name: 'EditPost',
-      component: EditPost
+      path: 'study/:subject',
+      name: 'Study',
+      component: Study
     }
   ]
 })

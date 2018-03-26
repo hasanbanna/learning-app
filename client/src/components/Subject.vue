@@ -14,7 +14,7 @@
   </div>
   <ul>
     <li v-for="subject in subjects" :key="subject">
-      {{ subject }}
+      <router-link v-bind:to="{ name: 'Study', params: { subject: subject.toLowerCase() } }">{{ subject }}</router-link>
     </li>
   </ul>
 </div>
@@ -29,7 +29,7 @@ export default {
     }
   },
   mounted () {
-    this.subjects = ['Maths', 'Robots', 'Politics']
+    this.subjects = ['Art', 'Robots', 'Politics']
   },
   methods: {
     addSubject: function (subject) {
@@ -45,8 +45,8 @@ export default {
 </script>
 <style lang="sass" scoped>
   .subjects
-    text-align: center
-
+    text-align: left
+    float: left
   span
     color: red
     cursor: pointer
