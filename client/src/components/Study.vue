@@ -2,7 +2,7 @@
   <div class="study">
     <div class="top-row-box">
       <div class="top-col-left">
-        <strong>{{ subjectTitle }}</strong>
+        <strong>{{ subjectTitle }} <span><a href="#"> show concept map </a></span> </strong>
       </div>
       <div class="top-col-right">
         <div class="timeframe-box">
@@ -17,8 +17,11 @@
     </div>
     <div class="middle-row-box">
       <div class="middle-col-left">
-        <h2>Topics</h2>
+        <h2>Topics <span> <a href=""> add new topic </a> </span></h2>
         <topic :subjectTitle="subjectTitle"></topic>
+
+        <button class="test">Test Topic</button>
+        <button class="test">Test With Related Topics</button>
       </div>
 
       <div v-if="topicHasFlashCards" class="middle-col-right">
@@ -79,14 +82,14 @@ export default {
     .top-col-left
       flex: 1
     .top-col-right
-      flex: 1
+      flex: 2
   .middle-row-box
     display: flex
     justify-content: space-between
     .middle-col-left
       flex: 1
     .middle-col-right
-      flex: 1
+      flex: 2
   .timeframe-box
     display: flex
     align-items: center
@@ -99,9 +102,11 @@ export default {
     display: flex
     flex-direction: row
     flex-wrap: wrap
+    flex-basis: 33%
+    padding-top: 10px
   button
     border: none
-    background: rgba(255,0,0,0.8)
+    background: rgba(255,0,0,0.7)
     padding: 10px
     text-transform: uppercase
     color: white
@@ -111,6 +116,10 @@ export default {
     cursor: pointer
     &:hover
       background: rgba(255,0,0,0.9)
+  .test
+      background: rgba(0,255,0,0.7)
+      &:hover
+        background: rgba(0,255,0,0.9)
   span
     font-size: 10px
     line-height: 23px

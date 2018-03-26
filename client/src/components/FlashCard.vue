@@ -1,8 +1,14 @@
 <template>
-  <div class="flashcard">
-    <div class="question">Question</div>
+  <div  class="flashcard" @mouseleave="cardHoveredOver = false" @mouseover="cardHoveredOver = true">
+    <div class="question" :class="{highlighted: cardHoveredOver}" >
+      Question
+    </div>
+    <ul v-if="cardHoveredOver" class="options">
+      <li><a href="#">show</a></li>
+      <li><a href="#">edit</a></li>
+      <li><a href="#">delete</a></li>
+    </ul>
   </div>
-
 </template>
 
 <script>
@@ -11,6 +17,19 @@ export default {
     topic: {
       type: String,
       required: true
+    }
+  },
+  data () {
+    return {
+      cardHoveredOver: false
+    }
+  },
+  methods: {
+    mouseOver: function () {
+      this.cardHoveredOver = true
+    },
+    mouseLeave: function () {
+      this.cardHoveredOver = false
     }
   }
 
@@ -28,11 +47,24 @@ export default {
    min-height: 150px
    margin-left: 5px
    margin-bottom: 5px
+   position: relative
   .question
    font-size: 24px
    font-weight: bold
    text-align: center
    vertical-align: middle
    line-height: 150px
+   transition: transform 0.3s
+  .highlighted
+   transform: scale(1.05)
+  .options
+    position: absolute
+    bottom: 0
+    right: 10px
+    list-style: none
+    font-size: 10px
+    color: green
+    li
+      display: inline-block
 
 </style>
