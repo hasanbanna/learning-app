@@ -2,7 +2,7 @@
   <div class="study">
     <div class="top-row-box">
       <div class="top-col-left">
-        <strong>{{ subjectTitle }} <span><a href="#"> show concept map </a></span> </strong>
+        <strong>{{ subjectTitle }} <span><a href="#"> show concept map </a></span></strong>
       </div>
       <div class="top-col-right">
         <div class="timeframe-box">
@@ -18,7 +18,7 @@
     <div class="middle-row-box">
       <div class="middle-col-left">
         <h2>Topics <span> <a href=""> add new topic </a> </span></h2>
-        <topic :subjectTitle="subjectTitle"></topic>
+        <topic :subjectId="subjectId"></topic>
 
         <button class="test">Test Topic</button>
         <button class="test">Test With Related Topics</button>
@@ -51,12 +51,14 @@ export default {
   data () {
     return {
       subjectTitle: '',
+      subjectId: 0,
       flashCards: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
       topicHasFlashCards: true
     }
   },
-  mounted () {
+  created () {
     this.subjectTitle = this.$route.params.subject
+    this.subjectId = this.$route.params.subject_id
   },
   components: {
     'topic': Topic,

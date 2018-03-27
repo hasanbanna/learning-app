@@ -2,9 +2,10 @@ const express = require('express')
 const bodyParser = require('body-parser')
 const cors = require('cors')
 const morgan = require('morgan')
-const Post = require("./models/post")
+const Subject = require('./models/subject')
+const Topic = require('./models/topic')
 const mongoose = require('mongoose')
-mongoose.connect('mongodb://localhost:27017/posts')
+mongoose.connect('mongodb://localhost:27017/knowledge_tree')
 const db = mongoose.connection
 db.on('error', console.error.bind(console, "connection error"))
 db.once("open", function(callback){
@@ -17,74 +18,72 @@ app.use(bodyParser.json())
 app.use(cors())
 
 
-// create a new post
+// create a new subject
 
-app.post('/posts', (req, res) => {
+app.post('/subjects', (req, res) => {
   const db = req.db
   const title = req.body.title
-  const description = req.body.description
-  const new_post = new Post({
-    title: title,
-    description: description
+  const newSubject = new Subject({
+    title: title
   })
-  new_post.save(function(error){
+  newSubject.save(function(error){
     if(error){
       console.log(error)
     }
     res.send({
       success: true,
-      message: 'Post saved successfully!'
+      message: 'Subject saved successfully!'
     })
   })
 })
 
-// read all Posts
+// read all subjects
 
-app.get('/posts', (req,res)=>{
-  Post.find({}, 'title description', (error, posts)=>{
+app.get('/subjects', (req,res)=>{
+  Subject.find({}, 'title', (error, subjects)=>{
     if(error) { console.error(error); }
     res.send({
-      posts: posts
+      subjects: subjects
     })
   }).sort({_id:-1})
 })
 
-// Fetch single post
+// Fetch single subject
 
-app.get('/post/:id', (req, res) => {
+app.get('/subject/:id', (req, res) => {
   const db = req.db
-  Post.findById(req.params.id, 'title description', function (error, post){
+  Subject.findById(req.params.id, 'title', function (error, subject){
     if(error) { console.error(error) }
-    res.send(post)
+    res.send(subject)
   })
 })
 
-// Update a post
+// Update a subject
 
-app.put('/posts/:id', (req, res) => {
+app.put('/subjects/:id', (req, res) => {
   const db = req.db
-  Post.findById(req.params.id, 'title description', function(error, post){
+  Subject.findById(req.params.id, 'title', function(error, subject){
     if(error) { console.error(error) }
-    post.title = req.body.title
-    post.description = req.body.description
-    post.save(function (error){
+    subject.title = req.body.title
+    subject.save(function (error){
       if(error){
         console.log(error)
       }
       res.send({
-        success: true
+        success: true,
+        message: "Subject was updated successfully"
       })
     })
   })
 })
 
-// Delete a post
+// Delete a subject
 
-app.delete('/posts/:id', (req, res) => {
+app.delete('/subjects/:id', (req, res) => {
   const db = req.db
-  Post.remove({
+  Subject.remove({
     _id: req.params.id
-  }, function(err, post){
+  }, function(err, subject){
     if(err){
       res.send(err)
     }
@@ -96,9 +95,9 @@ app.delete('/posts/:id', (req, res) => {
 
 // Total number of posts
 
-app.get('/postCount', (req, res)=>{
+app.get('/subjects/count', (req, res)=>{
   const db = req.db
-  Post.count(function(err, number){
+  Subject.count(function(err, number){
     if(err){
       res.send(err)
     }
@@ -108,4 +107,44 @@ app.get('/postCount', (req, res)=>{
   })
 })
 
+// add new topic for associated with a subject
+
+app.post('/topics/:subjectId', (req, res) =>{
+  const db = req.db
+  const title = req.body.title
+  const subjectId = req.body.subjectId
+  const newTopic = new Topic({
+    title: title,
+    subject: subjectId
+  })
+  newTopic.save(function(error){
+    if(error){
+      console.log(error)
+    }
+    res.send({
+      success: true,
+      message: 'Topic saved successfully!'
+    })
+  })
+})
+
+// Get all topics for a subject
+
+app.get('/topics/:subjectId', (req,res) =>{
+  const db = req.db
+  Topic.find({"subject" : req.params.subjectId}, 'title', function(error, topic){
+    if(error) { console.error(error) }
+    res.send(topic)
+  })
+})
+
+// Get all topics
+
+app.get('/topics', (req,res) =>{
+  const db = req.db
+  Topic.find({}, 'title subject', function(error, topic){
+    if(error) { console.error(error) }
+    res.send(topic)
+  })
+})
 app.listen(process.env.PORT || 8081)

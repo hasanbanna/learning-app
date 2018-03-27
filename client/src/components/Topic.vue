@@ -18,10 +18,13 @@
 </template>
 
 <script>
+
+import TopicsService from '../../services/TopicsService'
+
 export default {
   name: 'topic',
   props: {
-    subjectTitle: {
+    subjectId: {
       type: String,
       required: true
     }
@@ -32,13 +35,21 @@ export default {
       clickedTopic: ''
     }
   },
+  created () {
+    this.fetchTopicsWithSubjectId(this.subjectId)
+  },
   mounted () {
-    this.topics = ['Topic 1', 'Topic 2', 'Topic 3']
-    this.clickedTopic = this.topics[0]
+
   },
   methods: {
     topicClicked: function (topic) {
       this.clickedTopic = topic
+    },
+    async fetchTopicsWithSubjectId (id) {
+      const response = await TopicsService.fetchTopicsWithSubjectId(id)
+      this.topics = response.data.map((topic) => {
+        return topic.title
+      })
     }
   }
 }
