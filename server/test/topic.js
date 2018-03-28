@@ -48,4 +48,17 @@ describe("Post a new topic", function(){
       done()
     })
   })
+  it("should return error when no title is given", function(done){
+    const TopicMock = sinon.mock(new Topic({}))
+    const topic = TopicMock.object
+    const expectedResult = {status: false}
+
+    TopicMock.expects('save').yields(null, expectedResult)
+    topic.save(function (err, result){
+      TopicMock.verify()
+      TopicMock.restore()
+      expect(result.status).to.be.false
+      done()
+    })
+  })
 })

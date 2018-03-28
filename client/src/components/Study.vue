@@ -17,7 +17,6 @@
     </div>
     <div class="middle-row-box">
       <div class="middle-col-left">
-        <h2>Topics <span> <a href=""> add new topic </a> </span></h2>
         <topic :subjectId="subjectId"></topic>
 
         <button class="test">Test Topic</button>
@@ -53,7 +52,8 @@ export default {
       subjectTitle: '',
       subjectId: 0,
       flashCards: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
-      topicHasFlashCards: true
+      topicHasFlashCards: false
+
     }
   },
   created () {

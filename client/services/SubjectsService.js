@@ -2,14 +2,13 @@ import Api from './Api'
 
 export default {
   fetchSubjects () {
-    return Api().get('subjects')
+    return Api().get('subject')
   },
-
   addSubject (params) {
-    return Api().post('subjects', params)
+    return Api().post('subject', params)
   },
   updateSubject (params) {
-    return Api().put(`subjects/${params.id}`, params)
+    return Api().put(`subject/${params.id}`, params)
   },
 
   getSubject (params) {
@@ -17,9 +16,9 @@ export default {
   },
 
   deleteSubject (id) {
-    return Api().delete(`subjects/${id}`)
+    return Api().delete(`subject/${id}`)
   },
   getSubjectCount () {
-    return Api().get('subjects/count')
+    return Api().get('subject/count')
   }
 }

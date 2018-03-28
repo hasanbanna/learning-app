@@ -21,8 +21,8 @@ app.use(cors())
 
 
 // Routes
-
 const subject = require('./routes/subject')
+const topic = require('./routes/topic')
 
 // Subject routes
 app.route('/subject')
@@ -36,7 +36,7 @@ app.route('/subject/:id')
 
   // Total number of posts
 
-app.get('/subjects/count', (req, res)=>{
+app.get('/subjects/count', (req, res) =>{
   const db = req.db
   Subject.count(function(err, number){
     if(err){
@@ -50,44 +50,15 @@ app.get('/subjects/count', (req, res)=>{
 
 // add new topic for associated with a subject
 
-app.post('/topics', (req, res) =>{
-  const db = req.db
-  const title = req.body.title
-  const subject = req.body.subject
-  const newTopic = new Topic({
-    title: title,
-    subject: subject
-  })
-  newTopic.save(function(error){
-    if(error){
-      console.log(error)
-    }
-    res.send({
-      success: true,
-      message: 'Topic saved successfully!'
-    })
-  })
-})
+app.route('/topic')
+  .get(topic.getTopics)
+  .post(topic.postTopic)
 
-// Get all topics for a subject
+app.route('/topic/:subjectId')
+  .get(topic.getTopic)
 
-app.get('/topics/:subjectId', (req,res) =>{
-  const db = req.db
-  Topic.find({"subject" : req.params.subjectId}, 'title', function(error, topic){
-    if(error) { console.error(error) }
-    res.send(topic)
-  })
-})
-
-// Get all topics
-
-app.get('/topics', (req,res) =>{
-  const db = req.db
-  Topic.find({}, 'title subject', function(error, topic){
-    if(error) { console.error(error) }
-    res.send(topic)
-  })
-})
+app.route('/topic/:id')
+  .delete(topic.deleteTopic)
 
 app.listen(config.port, function(err){
   if(err) throw err

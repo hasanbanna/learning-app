@@ -35,7 +35,7 @@ export default {
   methods: {
     async fetchSubjects () {
       const response = await SubjectsService.fetchSubjects()
-      this.subjects = response.data.subjects
+      this.subjects = response.data
     },
     async addSubject () {
       await SubjectsService.addSubject({
