@@ -25,7 +25,7 @@ module.exports = {
  },
 
  /**
-  * GET /flashcard - get a flashcard for a topic
+  * GET /flashcard - get all flashcards for a topic
   */
  getFlashCard: (req, res) => {
    FlashCard.find({"topic": req.params.topicId}, (error, flashcard) =>{

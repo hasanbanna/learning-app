@@ -17,7 +17,7 @@
     </div>
     <div class="middle-row-box">
       <div class="middle-col-left">
-        <topic :subjectId="subjectId"></topic>
+        <topic :subjectId="subjectId" v-on:topic_id="setCurrentSelectedTopicId"></topic>
 
         <button class="test">Test Topic</button>
         <button class="test">Test With Related Topics</button>
@@ -28,7 +28,7 @@
             <flashcard
               v-for="flashcard in flashCards"
               :key="flashcard"
-              :topic="(flashcard+' ')"></flashcard>
+              :topicId="currentSelectedTopicId"></flashcard>
           </div>
         </div>
       <div v-else>
@@ -51,7 +51,7 @@ export default {
     return {
       subjectTitle: '',
       subjectId: 0,
-      flashCards: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+      currentSelectedTopicId: 0,
       topicHasFlashCards: false
 
     }
@@ -68,6 +68,9 @@ export default {
   methods: {
     selectTopic: function (topic) {
       this.selectedTopic = topic
+    },
+    setCurrentSelectedTopicId: function (id) {
+      this.currentSelectedTopicId = id
     }
   }
 }

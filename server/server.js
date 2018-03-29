@@ -34,19 +34,6 @@ app.route('/subject/:id')
   .put(subject.updateSubject)
   .delete(subject.deleteSubject)
 
-
-// app.get('/subjects/count', (req, res) => {
-//   const db = req.db
-//   Subject.count(function(err, number){
-//     if(err){
-//       res.send(err)
-//     }
-//     res.send({
-//       count: number
-//     })
-//   })
-// })
-
 // Topic routes
 app.route('/topic')
   .get(topic.getTopics)

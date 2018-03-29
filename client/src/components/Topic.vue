@@ -1,5 +1,6 @@
 <template>
   <div>
+    <div v-if="topics.length > 0">
     <h2>Topics <span> <a @click="showInput = true"> add new topic </a> </span></h2>
     <div v-if="showInput">
       <input type="text" placeholder="ADD NEW TOPIC" v-model="topicName">
@@ -8,17 +9,18 @@
     <ul>
       <li v-for="topic in topics" :key="topic.title">
         <div
-          v-if="(topic.title === clickedTopic)"
-          @click="topicClicked(topic.title)"
-          :class="{'active': (topic.title === clickedTopic)}" >
+          v-if="(topic.title === clickedTopicTitle)"
+          @click="topicClicked(topic)"
+          :class="{'active': (topic.title === clickedTopicTitle)}" >
           <span @click=deleteTopic(topic)> x </span>{{ topic.title }} - <a href="#">show concept map</a>
         </div>
         <div v-else
-         @click="topicClicked(topic.title)"
-         :class="{'active': (topic.title === clickedTopic)}" >
+         @click="topicClicked(topic)"
+         :class="{'active': (topic.title === clickedTopicTitle)}" >
            {{ topic.title }}</div>
       </li>
     </ul>
+    </div>
   </div>
 </template>
 
@@ -37,7 +39,7 @@ export default {
   data () {
     return {
       topics: [],
-      clickedTopic: '',
+      clickedTopicTitle: '',
       showInput: false,
       topicName: ''
     }
@@ -47,7 +49,8 @@ export default {
   },
   methods: {
     topicClicked: function (topic) {
-      this.clickedTopic = topic
+      this.clickedTopicTitle = topic.title
+      this.$emit('topic_id', topic._id)
     },
     async fetchTopicsWithSubjectId (id) {
       const response = await TopicsService.fetchTopicsWithSubjectId(id)
