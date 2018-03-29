@@ -3,9 +3,17 @@ const Schema = mongoose.Schema
 
 const TopicSchema = new Schema ({
   title: String,
-  subject: { type: Schema.Types.ObjectId, ref: 'Subject'}
+  subject: { type: Schema.Types.ObjectId, ref: 'Subject'},
+  createdAt: {type: Date, default: Date.now}
 })
 
-const Topic = mongoose.model("Topic", TopicSchema)
+TopicSchema.pre('save', next => {
+  now = new Date()
 
-module.exports = Topic
+  if(!this.createdAt){
+    this.createdAt = now
+  }
+  next()
+})
+
+module.exports =  mongoose.model("Topic", TopicSchema)

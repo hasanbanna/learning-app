@@ -9,7 +9,7 @@ module.exports = {
    const query = FlashCard.find({})
    query.exec( (err, flashcard) => {
     if(err) res.send(err)
-    res.send(topics)
+    res.send(flashcard)
    })
  },
 
