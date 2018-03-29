@@ -15,19 +15,13 @@ module.exports = {
   },
 
   /**
-   * POST /topic/:subjectId route to create a new topic related to a subject
+   * POST /topic route to create a new topic for a subject
    */
   postTopic: (req, res) => {
     const newTopic = new Topic(req.body)
     newTopic.save(function(error, subject){
-      if(error){
-        res.send(error)
-      }else{
-        res.send({
-          success: true,
-          message: 'Topic saved successfully '
-        })
-      }
+      if(error) res.send(error)
+      res.send({ success: true, message: 'Topic saved successfully '})
     })
   },
 
@@ -42,7 +36,7 @@ module.exports = {
   },
 
   /**
-   * DELETE /topic/:subjectId delete a topic with a given subject id
+   * DELETE /topic/:id delete a topic with a given subject id
    */
   deleteTopic: (req, res) => {
     Topic.remove({

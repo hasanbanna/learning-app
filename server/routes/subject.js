@@ -52,12 +52,13 @@ function updateSubject(req, res) {
     subject.title = req.body.title
     subject.save(function (error){
       if(error){
-        console.log(error)
+        res.send({
+          message: error
+        })
       }
       res.send({
         success: true,
         message: "Subject was updated successfully",
-        error: "Subject could not be updated"
       })
     })
   })

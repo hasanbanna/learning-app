@@ -23,7 +23,7 @@ app.use(cors())
 // Routes
 const subject = require('./routes/subject')
 const topic = require('./routes/topic')
-
+const flashcard = require('./routes/flashcard')
 // Subject routes
 app.route('/subject')
   .get(subject.getSubjects)
@@ -34,22 +34,20 @@ app.route('/subject/:id')
   .put(subject.updateSubject)
   .delete(subject.deleteSubject)
 
-  // Total number of posts
 
-app.get('/subjects/count', (req, res) =>{
-  const db = req.db
-  Subject.count(function(err, number){
-    if(err){
-      res.send(err)
-    }
-    res.send({
-      count: number
-    })
-  })
-})
+// app.get('/subjects/count', (req, res) => {
+//   const db = req.db
+//   Subject.count(function(err, number){
+//     if(err){
+//       res.send(err)
+//     }
+//     res.send({
+//       count: number
+//     })
+//   })
+// })
 
-// add new topic for associated with a subject
-
+// Topic routes
 app.route('/topic')
   .get(topic.getTopics)
   .post(topic.postTopic)
@@ -59,6 +57,18 @@ app.route('/topic/:subjectId')
 
 app.route('/topic/:id')
   .delete(topic.deleteTopic)
+
+
+// Flashcard routes
+app.route('/flashcard')
+  .get(flashcard.getFlashCards)
+  .post(flashcard.postFlashCard)
+
+app.route('/flashcard/:topicId')
+  .get(flashcard.getFlashCard)
+
+app.route('/flashcard/:id')
+  .delete(flashcard.deleteFlashCard)
 
 app.listen(config.port, function(err){
   if(err) throw err

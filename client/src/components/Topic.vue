@@ -11,7 +11,7 @@
           v-if="(topic.title === clickedTopic)"
           @click="topicClicked(topic.title)"
           :class="{'active': (topic.title === clickedTopic)}" >
-          <span @click=deleteTopic(topic._id)> x </span>{{ topic.title }} - <a href="#">show concept map</a>
+          <span @click=deleteTopic(topic)> x </span>{{ topic.title }} - <a href="#">show concept map</a>
         </div>
         <div v-else
          @click="topicClicked(topic.title)"
@@ -59,10 +59,12 @@ export default {
         subject: this.subjectId
       })
       this.showInput = false
+      this.topicName = ''
       this.fetchTopicsWithSubjectId(this.subjectId)
     },
-    async deleteTopic (id) {
-      await TopicsService.deleteTopic(id)
+    async deleteTopic (topic) {
+      await TopicsService.deleteTopic(topic._id)
+      this.topics.splice(this.topics.indexOf(topic), 1)
     }
   }
 }

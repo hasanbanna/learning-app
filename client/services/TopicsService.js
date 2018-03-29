@@ -18,7 +18,6 @@ export default {
   },
 
   deleteTopic (id) {
-    console.log(id)
     return Api().delete(`topic/${id}`)
   }
 }
