@@ -9,31 +9,33 @@
           <div class="timeframe-box-left">
             <timeframe></timeframe>
           </div>
-           <div class="timgframe-box-right">
-            <button>Add Flashcard</button>
-          </div>
         </div>
       </div>
     </div>
     <div class="middle-row-box">
       <div class="middle-col-left">
-        <topic :subjectId="subjectId" v-on:topic_id="setCurrentSelectedTopicId"></topic>
-
-        <button class="test">Test Topic</button>
-        <button class="test">Test With Related Topics</button>
-      </div>
-
-      <div v-if="topicHasFlashCards" class="middle-col-right">
-          <div class='flashcards'>
-            <flashcard
-              v-for="flashcard in flashCards"
-              :key="flashcard"
-              :topicId="currentSelectedTopicId"></flashcard>
-          </div>
+        <topic :subjectId="subjectId" @topic_id="setCurrentSelectedTopicId"></topic>
+        <div class="menu">
+        <h3>Menu</h3>
+          <ul class="action-menu">
+            <li><add-flash-card :topicId="currentSelectedTopicId" @add_flash_card="updateFlashCards"></add-flash-card></li>
+            <li><button class="test">Test Topic</button></li>
+            <li><button class="test">Test With Related Topics</button></li>
+          </ul>
         </div>
-      <div v-else>
-        <div class="middle-box-right">
-          <p>This topic currently has no flashcards. </p>
+      </div>
+        <div class="middle-col-right">
+          <div v-if="flashcards.length > 0">
+            <div class='flashcards'>
+              <flashcard
+                v-for="flashcard in flashcards"
+                :key="flashcard._id" :flashcard="flashcard"></flashcard>
+            </div>
+          </div>
+        <div v-else>
+          <div class="middle-box-right">
+            <p>This topic currently has no flashcards. </p>
+          </div>
         </div>
       </div>
     </div>
@@ -44,6 +46,8 @@
 import Topic from './Topic'
 import TimeFrame from './TimeFrame'
 import FlashCard from './FlashCard'
+import AddFlashCard from './AddFlashCard'
+import FlashcardsService from '../../services/FlashcardsService'
 
 export default {
   name: 'Study',
@@ -51,8 +55,9 @@ export default {
     return {
       subjectTitle: '',
       subjectId: 0,
-      currentSelectedTopicId: 0,
-      topicHasFlashCards: false
+      currentSelectedTopicId: '',
+      topicHasFlashCards: false,
+      flashcards: []
 
     }
   },
@@ -63,7 +68,8 @@ export default {
   components: {
     'topic': Topic,
     'timeframe': TimeFrame,
-    'flashcard': FlashCard
+    'flashcard': FlashCard,
+    'add-flash-card': AddFlashCard
   },
   methods: {
     selectTopic: function (topic) {
@@ -71,6 +77,20 @@ export default {
     },
     setCurrentSelectedTopicId: function (id) {
       this.currentSelectedTopicId = id
+    },
+    async fetchGetAllFlashcardForTopic (topicId) {
+      const response = await FlashcardsService.getAllFlashcardForTopic(topicId)
+      this.flashcards = response.data
+    },
+    updateFlashCards: function (obj) {
+      this.flashcards.push(obj)
+    }
+  },
+  watch: {
+    currentSelectedTopicId: function () {
+      if (this.currentSelectedTopicId) {
+        this.fetchGetAllFlashcardForTopic(this.currentSelectedTopicId)
+      }
     }
   }
 }
@@ -82,6 +102,7 @@ export default {
     text-transform: capitalize
     font-size: 32px
   .top-row-box
+    margin-bottom: 40px
     display: flex
     justify-content: space-between
     .top-col-left
@@ -89,6 +110,7 @@ export default {
     .top-col-right
       flex: 2
   .middle-row-box
+    margin-bottom: 40px
     display: flex
     justify-content: space-between
     .middle-col-left
@@ -111,7 +133,7 @@ export default {
     padding-top: 10px
   button
     border: none
-    background: rgba(255,0,0,0.7)
+    background: rgba(200,200,200,0.7)
     padding: 10px
     text-transform: uppercase
     color: white
@@ -120,12 +142,21 @@ export default {
     outline: none
     cursor: pointer
     &:hover
-      background: rgba(255,0,0,0.9)
-  .test
-      background: rgba(0,255,0,0.7)
-      &:hover
-        background: rgba(0,255,0,0.9)
+      background: rgba(200,200,200,0.9)
   span
     font-size: 10px
-    line-height: 23px
+    line-height: 150%
+    a
+     text-decoration: none
+     &:hover
+      padding-bottom: 2px
+      border-bottom: 1px solid blue
+  .menu
+    margin-top: 40px
+  .action-menu
+    list-style: none
+    padding: 0
+    margin: 0
+    li
+      padding-top: 10px
 </style>

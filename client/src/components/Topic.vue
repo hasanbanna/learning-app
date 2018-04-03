@@ -1,11 +1,13 @@
 <template>
   <div>
-    <div v-if="topics.length > 0">
-    <h2>Topics <span> <a @click="showInput = true"> add new topic </a> </span></h2>
-    <div v-if="showInput">
+
+    <h2>Topics <span> <a @click="showInput = true" href="#"> add new topic </a> </span></h2>
+    <div v-if="showInput" class='add-topic'>
       <input type="text" placeholder="ADD NEW TOPIC" v-model="topicName">
       <button @click="addTopic">add</button>
+      <button @click="showInput = false">close</button>
     </div>
+    <div v-if="topics.length > 0">
     <ul>
       <li v-for="topic in topics" :key="topic.title">
         <div
@@ -57,13 +59,18 @@ export default {
       this.topics = response.data
     },
     async addTopic () {
-      await TopicsService.addTopic({
-        title: this.topicName,
-        subject: this.subjectId
-      })
-      this.showInput = false
-      this.topicName = ''
-      this.fetchTopicsWithSubjectId(this.subjectId)
+      if (this.topicName) {
+        await TopicsService.addTopic({
+          title: this.topicName,
+          subject: this.subjectId
+        })
+        this.showInput = false
+        this.topicName = ''
+        this.fetchTopicsWithSubjectId(this.subjectId)
+      } else {
+        // change this later
+        alert('Please enter a non-empty topic.')
+      }
     },
     async deleteTopic (topic) {
       await TopicsService.deleteTopic(topic._id)
@@ -85,4 +92,10 @@ export default {
   span
     font-size: 10px
     line-height: 23px
+  a
+    text-decoration: none
+  a, a:visited
+    color: blue
+  .add-topic
+    padding-bottom: 10px
 </style>

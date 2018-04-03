@@ -3,7 +3,7 @@
    @mouseleave="cardHoveredOver = false"
    @mouseover="cardHoveredOver = true">
     <div class="question" :class="{highlighted: cardHoveredOver}" >
-      Question
+      {{ flashcard.question }}
     </div>
     <ul v-if="cardHoveredOver" class="options">
       <li><a href="#">show</a></li>
@@ -14,29 +14,22 @@
 </template>
 
 <script>
-import FlashcardsService from '../../services/FlashcardsService'
+
 export default {
   props: {
-    topicId: {
-      type: Number,
+    flashcard: {
+      type: Object,
       required: true
     }
   },
   data () {
     return {
-      flashcards: [],
       cardHoveredOver: false
     }
   },
-  created () {
-    this.fetchGetAllFlashcardForTopic()
+  mounted () {
   },
   methods: {
-    async fetchgetAllFlashcardForTopic () {
-      const response = await FlashcardsService.getAllFlashcardForTopic(this.topicId)
-      console.log(response)
-      this.flashcards = response.data
-    },
     mouseOver: function () {
       this.cardHoveredOver = true
     },

@@ -11,8 +11,8 @@ export default {
     return Api().put(`flashcard/${params.id}`, params)
   },
 
-  getAllFlashcardForTopic (params) {
-    return Api().get(`flashcard/${params.id}`)
+  getAllFlashcardForTopic (topicId) {
+    return Api().get(`flashcard/${topicId}`)
   },
 
   deleteFlashCard (id) {
