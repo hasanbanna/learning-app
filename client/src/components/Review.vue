@@ -87,7 +87,10 @@ export default {
   border-radius: 5px
   min-height: 450px
   position: relative
-  padding-top: 50px
+  padding: 10px
+  margin-top: 20px
+  display: flex
+  justify-content: center
 .answer-btn-container
   position: absolute
   width: 100%
