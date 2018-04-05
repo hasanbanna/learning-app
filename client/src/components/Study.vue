@@ -1,30 +1,15 @@
 <template>
   <div class="study">
-    <div class="top-row-box">
-      <div class="top-col-left">
-        <strong>{{ subjectTitle }} <span><a href="#"> show concept map </a></span></strong>
-      </div>
-      <div class="top-col-right">
-        <div class="timeframe-box">
-          <div class="timeframe-box-left">
-            <timeframe></timeframe>
-          </div>
-        </div>
-      </div>
+    <div class="header">
+      <strong class="subject-title">{{ subjectTitle }} <span><a href="#">concept map </a></span></strong>
+      <ul class="action-menu">
+        <li><add-flash-card :topicId="currentSelectedTopicId" @add_flash_card="updateFlashCards"></add-flash-card></li>
+        <li><button class="test" @click="showTestComponent = true">Review Topic</button></li>
+        <li><button class="test">Review With Related Topics</button></li>
+      </ul>
     </div>
-    <div class="middle-row-box">
-      <div class="middle-col-left">
+    <div class="middle-row-container">
         <topic :subjectId="subjectId" @topic_id="setCurrentSelectedTopicId"></topic>
-        <div class="menu">
-        <h3>Menu</h3>
-          <ul class="action-menu">
-            <li><add-flash-card :topicId="currentSelectedTopicId" @add_flash_card="updateFlashCards"></add-flash-card></li>
-            <li><button class="test" @click="showTestComponent = true">Test Topic</button></li>
-            <li><button class="test">Test With Related Topics</button></li>
-          </ul>
-        </div>
-      </div>
-        <div class="middle-col-right">
           <div v-if="flashcards.length > 0 && !showTestComponent">
             <div class='flashcards'>
               <flashcard
@@ -34,14 +19,13 @@
               </flashcard>
             </div>
           </div>
-          <div v-else-if="showTestComponent">
-              <test :flashcards="flashcards"></test>
+          <div v-else-if="showTestComponent && topicHasFlashCards">
+              <review :flashcards="flashcards" @showTestComponent="showTestComponent" :key="flashcards[0]._id"></review>
           </div>
           <div v-else>
             <p>This topic currently has no flashcards. </p>
           </div>
-        </div>
-      </div>
+    </div>
   </div>
 </template>
 
@@ -50,7 +34,7 @@ import Topic from './Topic'
 import TimeFrame from './TimeFrame'
 import FlashCard from './FlashCard'
 import AddFlashCard from './AddFlashCard'
-import Test from './Test'
+import Review from './Review'
 import FlashcardsService from '../../services/FlashcardsService'
 
 export default {
@@ -75,7 +59,7 @@ export default {
     'timeframe': TimeFrame,
     'flashcard': FlashCard,
     'add-flash-card': AddFlashCard,
-    'test': Test
+    'review': Review
   },
   methods: {
     selectTopic: function (topic) {
@@ -87,16 +71,20 @@ export default {
     async fetchGetAllFlashcardForTopic (topicId) {
       const response = await FlashcardsService.getAllFlashcardForTopic(topicId)
       this.flashcards = response.data
+      if (this.flashcards.length !== 0) {
+        this.topicHasFlashCards = true
+      } else {
+        this.topicHasFlashCards = false
+      }
     },
     updateFlashCards: function (obj) {
       this.flashcards.push(obj)
     }
   },
   watch: {
-    currentSelectedTopicId: function () {
-      if (this.currentSelectedTopicId) {
-        this.fetchGetAllFlashcardForTopic(this.currentSelectedTopicId)
-      }
+    currentSelectedTopicId: function (id) {
+      this.currentSelectedTopicId = id
+      this.fetchGetAllFlashcardForTopic(id)
     }
   }
 }
@@ -104,65 +92,47 @@ export default {
 </script>
 
 <style lang="sass" scoped>
-  strong
-    text-transform: capitalize
-    font-size: 24px
-  .top-row-box
-    margin-bottom: 40px
-    display: flex
-    justify-content: space-between
-    .top-col-left
-      flex: 1
-    .top-col-right
-      flex: 2
-  .middle-row-box
-    margin-bottom: 40px
-    display: flex
-    justify-content: space-between
-    .middle-col-left
-      flex: 1
-    .middle-col-right
-      flex: 2
-  .timeframe-box
-    display: flex
-    align-items: center
-    justify-content: center
-    .timeframe-box-left
-      flex: 1
-    .timeframe-box-right
-      flex: 2
-  .flashcards
-    display: flex
-    flex-direction: row
-    flex-wrap: wrap
-    flex-basis: 33%
-    padding-top: 10px
-  button
-    border: none
-    background: rgba(200,200,200,0.7)
-    padding: 10px
-    text-transform: uppercase
-    color: white
-    font-weight: bold
-    border-radius: 3px
-    outline: none
-    cursor: pointer
+.header
+  display: flex
+  justify-content: space-between
+  align-items: center
+.action-menu
+  list-style: none
+  padding: 0
+  margin: 0
+  align-self: flex-end
+  li
+    display: inline-block
+    margin-left: 10px
+.middle-row-container
+  display: flex
+  justify-content: space-between
+.flashcards
+  display: flex
+  flex-direction: row
+  align-self: center
+  flex-wrap: wrap
+  flex-basis: 70%
+  margin-top: 30px
+button
+  border: none
+  background: rgba(200,200,200,0.7)
+  padding: 10px
+  text-transform: uppercase
+  color: white
+  font-weight: bold
+  border-radius: 3px
+  outline: none
+  cursor: pointer
+  &:hover
+    background: rgba(200,200,200,0.9)
+span
+  font-size: 10px
+  line-height: 150%
+  a
+    text-decoration: none
     &:hover
-      background: rgba(200,200,200,0.9)
-  span
-    font-size: 10px
-    line-height: 150%
-    a
-     text-decoration: none
-     &:hover
-      padding-bottom: 2px
-      border-bottom: 1px solid blue
-  .menu
-    margin-top: 40px
-  .action-menu
-    list-style: none
-    padding: 0
-    margin: 0
-    li
-      padding-top: 10px
+    padding-bottom: 2px
+    border-bottom: 1px solid blue
+
 </style>

@@ -1,3 +1,4 @@
+
 <template>
 <div class="subjects">
   <h2>
@@ -14,6 +15,7 @@
   </div>
   <ul>
     <li v-for="subject in subjects" :key="subject._id">
+      <!-- FIXME: route link needs to have no spaces where as the passed title must have spaces -->
       <span @click="deleteSubject(subject)"> x </span><router-link v-bind:to="{ name: 'Study', params: { subject: subject.title.toLowerCase(), subject_id: subject._id } }">{{ subject.title }}</router-link>
     </li>
   </ul>
