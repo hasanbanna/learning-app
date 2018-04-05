@@ -19,26 +19,29 @@
         <h3>Menu</h3>
           <ul class="action-menu">
             <li><add-flash-card :topicId="currentSelectedTopicId" @add_flash_card="updateFlashCards"></add-flash-card></li>
-            <li><button class="test">Test Topic</button></li>
+            <li><button class="test" @click="showTestComponent = true">Test Topic</button></li>
             <li><button class="test">Test With Related Topics</button></li>
           </ul>
         </div>
       </div>
         <div class="middle-col-right">
-          <div v-if="flashcards.length > 0">
+          <div v-if="flashcards.length > 0 && !showTestComponent">
             <div class='flashcards'>
               <flashcard
                 v-for="flashcard in flashcards"
-                :key="flashcard._id" :flashcard="flashcard"></flashcard>
+                :key="flashcard._id"
+                :flashcard="flashcard">
+              </flashcard>
             </div>
           </div>
-        <div v-else>
-          <div class="middle-box-right">
+          <div v-else-if="showTestComponent">
+              <test :flashcards="flashcards"></test>
+          </div>
+          <div v-else>
             <p>This topic currently has no flashcards. </p>
           </div>
         </div>
       </div>
-    </div>
   </div>
 </template>
 
@@ -47,6 +50,7 @@ import Topic from './Topic'
 import TimeFrame from './TimeFrame'
 import FlashCard from './FlashCard'
 import AddFlashCard from './AddFlashCard'
+import Test from './Test'
 import FlashcardsService from '../../services/FlashcardsService'
 
 export default {
@@ -57,7 +61,8 @@ export default {
       subjectId: 0,
       currentSelectedTopicId: '',
       topicHasFlashCards: false,
-      flashcards: []
+      flashcards: [],
+      showTestComponent: false
 
     }
   },
@@ -69,7 +74,8 @@ export default {
     'topic': Topic,
     'timeframe': TimeFrame,
     'flashcard': FlashCard,
-    'add-flash-card': AddFlashCard
+    'add-flash-card': AddFlashCard,
+    'test': Test
   },
   methods: {
     selectTopic: function (topic) {
@@ -100,7 +106,7 @@ export default {
 <style lang="sass" scoped>
   strong
     text-transform: capitalize
-    font-size: 32px
+    font-size: 24px
   .top-row-box
     margin-bottom: 40px
     display: flex
