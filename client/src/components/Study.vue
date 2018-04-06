@@ -10,14 +10,12 @@
     </div>
     <div class="middle-row-container">
         <topic :subjectId="subjectId" @topic_id="setCurrentSelectedTopicId"></topic>
-          <div v-if="flashcards.length > 0 && !showTestComponent">
-            <div class='flashcards'>
+          <div v-if="flashcards.length > 0 && !showTestComponent" class="flashcards">
               <flashcard
                 v-for="flashcard in flashcards"
                 :key="flashcard._id"
                 :flashcard="flashcard">
               </flashcard>
-            </div>
           </div>
           <div v-else-if="showTestComponent && topicHasFlashCards">
               <review :flashcards="flashcards" @showTestComponent="showTestComponent" :key="flashcards[0]._id"></review>
@@ -107,13 +105,13 @@ export default {
 .middle-row-container
   display: flex
   justify-content: space-between
+  margin-top: 40px
 .flashcards
   display: flex
-  flex-direction: row
-  align-self: center
+  justify-content: space-between
   flex-wrap: wrap
-  flex-basis: 70%
-  margin-top: 30px
+  flex-direction: row
+  flex: 1
 button
   border: none
   background: rgba(200,200,200,0.7)
