@@ -13,7 +13,7 @@
           v-if="(topic.title === clickedTopicTitle)"
           @click="topicClicked(topic)"
           :class="{'active': (topic.title === clickedTopicTitle)}" >
-          <span @click=deleteTopic(topic)> x </span>{{ topic.title }} - <a href="#">concept map</a>
+          <span @click=deleteTopic(topic._id)> x </span>{{ topic.title }} - <a href="#">concept map</a>
         </div>
         <div v-else
          @click="topicClicked(topic)"
@@ -39,14 +39,18 @@ export default {
   },
   data () {
     return {
-      topics: [],
       clickedTopicTitle: '',
       showInput: false,
       topicName: ''
     }
   },
   created () {
-    this.fetchTopicsWithSubjectId(this.subjectId)
+    this.$store.dispatch('fetchTopicsForCurrentSelectedSubject', this.$store.getters.getCurrentSelectedSubject.id)
+  },
+  computed: {
+    topics () {
+      return this.$store.getters.getCurrentSelectedSubjectTopics
+    }
   },
   methods: {
     topicClicked: function (topic) {
@@ -61,21 +65,19 @@ export default {
     },
     async addTopic () {
       if (this.topicName) {
-        await TopicsService.addTopic({
+        this.$store.dispatch('addTopicForCurrentSelectedSubject', {
           title: this.topicName,
-          subject: this.subjectId
+          subject: this.$store.getters.getCurrentSelectedSubject.id
         })
         this.showInput = false
         this.topicName = ''
-        this.fetchTopicsWithSubjectId(this.subjectId)
       } else {
         // change this later
         alert('Please enter a non-empty topic.')
       }
     },
-    async deleteTopic (topic) {
-      await TopicsService.deleteTopic(topic._id)
-      this.topics.splice(this.topics.indexOf(topic), 1)
+    deleteTopic (topicId) {
+      this.$store.dispatch('deleteTopicForCurrentSelectedSubject', topicId)
     }
   }
 }

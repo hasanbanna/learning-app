@@ -15,7 +15,7 @@
   <ul>
     <li v-for="subject in subjects" :key="subject._id">
       <!-- FIXME: route link needs to have no spaces where as the passed title must have spaces -->
-      <span @click="deleteSubject(subject)"> x </span><router-link v-bind:to="{ name: 'Study', params: { subject: sanitizeTitle(subject.title), subject_id: subject._id } }">{{ subject.title }}</router-link>
+      <span @click="deleteSubject(subject)"> x </span><router-link v-bind:to="{ name: 'Study', params: { title: subject.title, sanitized_title: sanitizeTitle(subject.title), subject_id: subject._id } }">{{ subject.title }}</router-link>
      </li>
   </ul>
 </div>

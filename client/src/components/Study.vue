@@ -39,8 +39,6 @@ export default {
   name: 'Study',
   data () {
     return {
-      subjectTitle: '',
-      subjectId: 0,
       currentSelectedTopicId: '',
       topicHasFlashCards: false,
       flashcards: [],
@@ -49,8 +47,18 @@ export default {
     }
   },
   created () {
-    this.subjectTitle = this.$route.params.subject
-    this.subjectId = this.$route.params.subject_id
+    this.$store.dispatch('setCurrentSelectedSubject', {
+      title: this.$route.params.title,
+      id: this.$route.params.subject_id
+    })
+  },
+  computed: {
+    subjectTitle () {
+      return this.$store.getters.getCurrentSelectedSubject.title
+    },
+    subjectId () {
+      return this.$store.getters.getCurrentSelectedSubject.id
+    }
   },
   components: {
     'topic': Topic,

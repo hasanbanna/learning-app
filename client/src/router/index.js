@@ -13,7 +13,7 @@ export default new Router({
       component: Main
     },
     {
-      path: 'study/:subject',
+      path: 'study/:sanitized_title',
       name: 'Study',
       component: Study
     }
