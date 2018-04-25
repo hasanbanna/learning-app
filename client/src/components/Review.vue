@@ -1,9 +1,8 @@
 // TODO: Is the neutral button needed?
-
 <template>
   <div class='test-container' v-if="flashcardCopy.length > 0">
-    <h3 v-if="canShowQuestion">Question: {{ flashcardCopy[0].question }}</h3>
-    <h3 v-if="canShowAnswer">Answer: {{  flashcardCopy[0].answer }}</h3>
+    <h2 v-if="canShowQuestion">Question: {{ flashcardCopy[0].question }}</h2>
+    <h2 v-if="canShowAnswer">Answer: {{  flashcardCopy[0].answer }}</h2>
     <div class="answer-btn-container">
       <button @click="canShowAnswer = true" v-if="canShowAnswer == false">Show Answer</button>
       <button @click="canShowAnswer = false" v-if="canShowAnswer == true">Close Answer</button>
@@ -13,6 +12,7 @@
         <li><button class="good" @click="goodClicked">good</button></li>
         <li><button class="neutral" @click="neutralClicked">neutral</button></li>
         <li><button class="bad" @click="badClicked">bad</button></li>
+        <li><button class="quit" @click="$emit('can-show-component',false)">quit</button></li>
       </ul>
     </div>
     <div class="timer">time: {{ time }} </div>
@@ -74,7 +74,9 @@ export default {
     },
     goBackToFlashCards: function () {
       this.$emit('showTestComponent', 'false')
-      this.$destroy()
+    },
+    quitClicked: function () {
+      this.$emit('show_review_component', 'false')
     }
   }
 }
@@ -86,34 +88,29 @@ export default {
   text-align: center
   border-radius: 5px
   min-height: 450px
-  position: relative
+  width: 100%
   padding: 10px
   margin-top: 20px
-  display: flex
-  justify-content: center
+  position: relative
 .answer-btn-container
   position: absolute
-  width: 100%
-  display: flex
-  height: 100h
-  justify-content: center
   bottom: 15%
+  left: 50%
+  transform: translate(-50%)
 .btn-container
   position: absolute
-  width: 100%
-  display: flex
-  height: 100h
-  justify-content: center
   bottom: 5%
+  left: 50%
+  transform: translate(-50%)
 ul
-  align-self: center
   list-style: none
   padding: 0
   margin: 0
   li
     display: inline
-    align-self: center
     margin-left: 5px
+h2
+  text-align: center
 button
   color: black
   text-align: center

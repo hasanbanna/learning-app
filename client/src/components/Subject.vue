@@ -1,4 +1,3 @@
-
 <template>
 <div class="subjects">
   <h2>
@@ -16,41 +15,40 @@
   <ul>
     <li v-for="subject in subjects" :key="subject._id">
       <!-- FIXME: route link needs to have no spaces where as the passed title must have spaces -->
-      <span @click="deleteSubject(subject)"> x </span><router-link v-bind:to="{ name: 'Study', params: { subject: subject.title.toLowerCase(), subject_id: subject._id } }">{{ subject.title }}</router-link>
-    </li>
+      <span @click="deleteSubject(subject)"> x </span><router-link v-bind:to="{ name: 'Study', params: { subject: sanitizeTitle(subject.title), subject_id: subject._id } }">{{ subject.title }}</router-link>
+     </li>
   </ul>
 </div>
 </template>
 <script>
-import SubjectsService from '../../services/SubjectsService'
+
 export default {
   data () {
     return {
-      subjects: [],
       showInput: false,
       subject: ''
     }
   },
   created () {
-    this.fetchSubjects()
+    this.$store.dispatch('fetchSubjects')
+  },
+  computed: {
+    subjects () {
+      return this.$store.getters.getSubjects
+    }
   },
   methods: {
-    async fetchSubjects () {
-      const response = await SubjectsService.fetchSubjects()
-      this.subjects = response.data
+    addSubject () {
+      this.$store.dispatch('addSubject', this.subject)
     },
-    async addSubject () {
-      await SubjectsService.addSubject({
-        title: this.subject
-      })
-      this.subjects.push(this.subject)
+    deleteSubject (subject) {
+      this.$store.dispatch('deleteSubject', subject)
     },
-    async deleteSubject (subject) {
-      await SubjectsService.deleteSubject(subject._id)
-      this.subjects.splice(this.subjects.indexOf(subject), 1)
-    },
-    canShowInput: function () {
+    canShowInput () {
       this.showInput = !this.showInput
+    },
+    sanitizeTitle (title) {
+      return title.replace(/\s/g, '-').toLowerCase()
     }
   }
 }

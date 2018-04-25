@@ -17,8 +17,8 @@
                 :flashcard="flashcard">
               </flashcard>
           </div>
-          <div v-else-if="showTestComponent && topicHasFlashCards">
-              <review :flashcards="flashcards" @showTestComponent="showTestComponent" :key="flashcards[0]._id"></review>
+          <div v-else-if="showTestComponent && topicHasFlashCards" class="flashcards">
+              <review :flashcards="flashcards" @can-show-component="showTestComponent = $event" :key="flashcards[0]._id"></review>
           </div>
           <div v-else>
             <p>This topic currently has no flashcards. </p>
@@ -104,7 +104,7 @@ export default {
     margin-left: 10px
 .middle-row-container
   display: flex
-  justify-content: space-between
+  justify-content: flex-start
   margin-top: 40px
 .flashcards
   display: flex

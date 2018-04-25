@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <h1 style="text-align:center;">A E S T H E T I C</h1>
+    <h1 style="text-align:center;">Learning Tree</h1>
     <router-view/>
   </div>
 </template>
