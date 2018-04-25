@@ -8,7 +8,7 @@
     </div>
     <div v-if="topics.length > 0">
     <ul>
-      <li v-for="topic in topics" :key="topic.title">
+      <li v-for="topic in topics" :key="topic._id">
         <div
           v-if="(topic.title === clickedTopicTitle)"
           @click="topicClicked(topic)"
@@ -27,16 +27,8 @@
 
 <script>
 
-import TopicsService from '../../services/TopicsService'
-
 export default {
   name: 'topic',
-  props: {
-    subjectId: {
-      type: String,
-      required: true
-    }
-  },
   data () {
     return {
       clickedTopicTitle: '',
@@ -55,15 +47,10 @@ export default {
   methods: {
     topicClicked: function (topic) {
       this.clickedTopicTitle = topic.title
-      this.$emit('topic_id', topic._id)
+      this.$store.dispatch('setCurrentSelectedTopic', topic)
+      this.$store.dispatch('fetchAllFlashcardsForTopic', topic._id)
     },
-    async fetchTopicsWithSubjectId (id) {
-      const response = await TopicsService.fetchTopicsWithSubjectId(id)
-      this.topics = response.data
-      this.$emit('topic_id', this.topics[0]._id)
-      this.clickedTopicTitle = this.topics[0].title
-    },
-    async addTopic () {
+    addTopic () {
       if (this.topicName) {
         this.$store.dispatch('addTopicForCurrentSelectedSubject', {
           title: this.topicName,

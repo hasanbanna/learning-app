@@ -1,8 +1,10 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import _ from 'lodash'
+
 import SubjectsService from '../services/SubjectsService'
 import TopicsService from '../services/TopicsService'
+import FlashcardsService from '../services/FlashcardsService'
 
 Vue.use(Vuex)
 
@@ -10,7 +12,9 @@ export const store = new Vuex.Store({
   state: {
     subjects: [],
     currentSelectedSubject: {},
-    currentSelectedSubjectTopics: []
+    currentSelectedSubjectTopics: [],
+    currentFlashcardsForSelectedTopic: [],
+    currentSelectedTopic: {}
   },
   getters: {
     getSubjects (state) {
@@ -21,6 +25,12 @@ export const store = new Vuex.Store({
     },
     getCurrentSelectedSubjectTopics (state) {
       return state.currentSelectedSubjectTopics
+    },
+    getCurrentFlashcardsForSelectedTopic (state) {
+      return state.currentFlashcardsForSelectedTopic
+    },
+    getCurrentSelectedTopic (state) {
+      return state.currentSelectedTopic
     }
   },
   mutations: {
@@ -40,12 +50,19 @@ export const store = new Vuex.Store({
     },
     FETCH_CURRENT_SELECTED_SUBJECT_TOPICS: (state, payload) => {
       state.currentSelectedSubjectTopics = payload
+      state.currenSelectedTopic = payload[0]
     },
     ADD_TOPIC_FOR_CURRENT_SELECTED_SUBJECT: (state, payload) => {
       state.currentSelectedSubjectTopics.push(payload)
     },
     DELETE_TOPIC_FOR_CURRENT_SELECTED_SUBJECT: (state, id) => {
       state.currentSelectedSubjectTopics = _.reject(state.currentSelectedSubjectTopics, (topic) => { return topic._id === id })
+    },
+    FETCH_ALL_FLASHCARDS_FOR_TOPIC: (state, payload) => {
+      state.currentFlashcardsForSelectedTopic = payload
+    },
+    SET_CURRENT_SELECTED_TOPIC: (state, payload) => {
+      state.currentSelectedTopic = payload
     }
   },
   actions: {
@@ -75,6 +92,14 @@ export const store = new Vuex.Store({
     async deleteTopicForCurrentSelectedSubject ({commit}, id) {
       await TopicsService.deleteTopic(id)
       commit('DELETE_TOPIC_FOR_CURRENT_SELECTED_SUBJECT', id)
+    },
+    async fetchAllFlashcardsForTopic ({commit}, id) {
+      // add state then get the current selected topic if it exists
+      const response = await FlashcardsService.getAllFlashcardForTopic(id)
+      commit('FETCH_ALL_FLASHCARDS_FOR_TOPIC', response.data)
+    },
+    async setCurrentSelectedTopic ({commit}, payload) {
+      commit('SET_CURRENT_SELECTED_TOPIC', payload)
     }
   }
 })

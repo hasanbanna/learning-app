@@ -9,31 +9,29 @@
       </ul>
     </div>
     <div class="middle-row-container">
-        <topic :subjectId="subjectId" @topic_id="setCurrentSelectedTopicId"></topic>
-          <div v-if="flashcards.length > 0 && !showTestComponent" class="flashcards">
-              <flashcard
-                v-for="flashcard in flashcards"
-                :key="flashcard._id"
-                :flashcard="flashcard">
-              </flashcard>
-          </div>
-          <div v-else-if="showTestComponent && topicHasFlashCards" class="flashcards">
-              <review :flashcards="flashcards" @can-show-component="showTestComponent = $event" :key="flashcards[0]._id"></review>
-          </div>
-          <div v-else>
-            <p>This topic currently has no flashcards. </p>
-          </div>
+        <topic></topic>
+        <div v-if="flashcards.length > 0 && !showTestComponent" class="flashcards">
+            <flashcard
+              v-for="flashcard in flashcards"
+              :key="flashcard._id"
+              :flashcard="flashcard">
+            </flashcard>
+        </div>
+        <div v-else-if="showTestComponent && topicHasFlashCards" class="flashcards">
+            <review :flashcards="flashcards" @can-show-component="showTestComponent = $event" :key="flashcards[0]._id"></review>
+        </div>
+        <div v-else>
+          <p>This topic currently has no flashcards. </p>
+        </div>
     </div>
   </div>
 </template>
 
 <script>
 import Topic from './Topic'
-import TimeFrame from './TimeFrame'
 import FlashCard from './FlashCard'
 import AddFlashCard from './AddFlashCard'
 import Review from './Review'
-import FlashcardsService from '../../services/FlashcardsService'
 
 export default {
   name: 'Study',
@@ -41,7 +39,6 @@ export default {
     return {
       currentSelectedTopicId: '',
       topicHasFlashCards: false,
-      flashcards: [],
       showTestComponent: false
 
     }
@@ -58,11 +55,13 @@ export default {
     },
     subjectId () {
       return this.$store.getters.getCurrentSelectedSubject.id
+    },
+    flashcards () {
+      return this.$store.getters.getCurrentFlashcardsForSelectedTopic
     }
   },
   components: {
     'topic': Topic,
-    'timeframe': TimeFrame,
     'flashcard': FlashCard,
     'add-flash-card': AddFlashCard,
     'review': Review
@@ -71,26 +70,18 @@ export default {
     selectTopic: function (topic) {
       this.selectedTopic = topic
     },
-    setCurrentSelectedTopicId: function (id) {
-      this.currentSelectedTopicId = id
-    },
-    async fetchGetAllFlashcardForTopic (topicId) {
-      const response = await FlashcardsService.getAllFlashcardForTopic(topicId)
-      this.flashcards = response.data
-      if (this.flashcards.length !== 0) {
-        this.topicHasFlashCards = true
-      } else {
-        this.topicHasFlashCards = false
-      }
-    },
+    // async fetchGetAllFlashcardForTopic (topicId) {
+
+    //   // const response = await FlashcardsService.getAllFlashcardForTopic(topicId)
+    //   // this.flashcards = response.data
+    //   if (this.flashcards.length !== 0) {
+    //     this.topicHasFlashCards = true
+    //   } else {
+    //     this.topicHasFlashCards = false
+    //   }
+    // },
     updateFlashCards: function (obj) {
       this.flashcards.push(obj)
-    }
-  },
-  watch: {
-    currentSelectedTopicId: function (id) {
-      this.currentSelectedTopicId = id
-      this.fetchGetAllFlashcardForTopic(id)
     }
   }
 }
