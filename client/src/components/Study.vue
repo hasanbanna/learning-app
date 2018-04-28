@@ -3,25 +3,27 @@
     <div class="header">
       <strong class="subject-title">{{ subjectTitle }} <span><a href="#">concept map </a></span></strong>
       <ul class="action-menu">
-        <li><add-flash-card :topicId="currentSelectedTopicId" @add_flash_card="updateFlashCards"></add-flash-card></li>
+        <!-- <li><add-flash-card :topicId="currentSelectedTopicId" @add_flash_card="updateFlashCards"></add-flash-card></li> -->
+        <li><button class="test" @click="setCanAddFlashcard(true)">Add flashcard</button></li>
         <li><button class="test" @click="showTestComponent = true">Review Topic</button></li>
         <li><button class="test">Review With Related Topics</button></li>
       </ul>
     </div>
     <div class="middle-row-container">
         <topic></topic>
-        <div v-if="flashcards.length > 0 && !showTestComponent" class="flashcards">
+        <div v-if="flashcards.length > 0" class="flashcards">
             <flashcard
               v-for="flashcard in flashcards"
               :key="flashcard._id"
               :flashcard="flashcard">
             </flashcard>
         </div>
-        <div v-else-if="showTestComponent && topicHasFlashCards" class="flashcards">
-            <review :flashcards="flashcards" @can-show-component="showTestComponent = $event" :key="flashcards[0]._id"></review>
-        </div>
         <div v-else>
           <p>This topic currently has no flashcards. </p>
+        </div>
+
+        <div v-if="canAddNewFlashcard">
+          <add-flashcard></add-flashcard>
         </div>
     </div>
   </div>
@@ -58,12 +60,15 @@ export default {
     },
     flashcards () {
       return this.$store.getters.getCurrentFlashcardsForSelectedTopic
+    },
+    canAddNewFlashcard () {
+      return this.$store.getters.getCanAddNewFlashcard
     }
   },
   components: {
     'topic': Topic,
     'flashcard': FlashCard,
-    'add-flash-card': AddFlashCard,
+    'add-flashcard': AddFlashCard,
     'review': Review
   },
   methods: {
@@ -82,6 +87,9 @@ export default {
     // },
     updateFlashCards: function (obj) {
       this.flashcards.push(obj)
+    },
+    setCanAddFlashcard (bool) {
+      this.$store.dispatch('setAddNewFlashcard', bool)
     }
   }
 }

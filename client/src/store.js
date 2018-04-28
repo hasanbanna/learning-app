@@ -14,7 +14,8 @@ export const store = new Vuex.Store({
     currentSelectedSubject: {},
     currentSelectedSubjectTopics: [],
     currentFlashcardsForSelectedTopic: [],
-    currentSelectedTopic: {}
+    currentSelectedTopic: {},
+    canAddNewFlashcard: false
   },
   getters: {
     getSubjects (state) {
@@ -31,6 +32,9 @@ export const store = new Vuex.Store({
     },
     getCurrentSelectedTopic (state) {
       return state.currentSelectedTopic
+    },
+    getCanAddNewFlashcard (state) {
+      return state.canAddNewFlashcard
     }
   },
   mutations: {
@@ -63,6 +67,9 @@ export const store = new Vuex.Store({
     },
     SET_CURRENT_SELECTED_TOPIC: (state, payload) => {
       state.currentSelectedTopic = payload
+    },
+    SET_CAN_ADD_NEW_FLASHCARD (state, payload) {
+      state.canAddNewFlashcard = payload
     }
   },
   actions: {
@@ -100,6 +107,9 @@ export const store = new Vuex.Store({
     },
     async setCurrentSelectedTopic ({commit}, payload) {
       commit('SET_CURRENT_SELECTED_TOPIC', payload)
+    },
+    async setAddNewFlashcard ({commit}, bool) {
+      commit('SET_CAN_ADD_NEW_FLASHCARD', bool)
     }
   }
 })
