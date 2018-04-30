@@ -25,7 +25,8 @@ function postSubject(req, res){
     }else{
       res.send({
         success: true,
-        message: 'Subject saved successfully!'
+        message: 'Subject saved successfully!',
+        id: subject._id
       })
     }
 

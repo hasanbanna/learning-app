@@ -1,6 +1,6 @@
 <template>
-  <div class="topic">
-    <h2>Topics <span> <a @click="showInput = true" href="#"> add new topic </a> </span></h2>
+  <div>
+    <h5>Topics <span> <a @click="showInput = true" href="#"> add new topic </a> </span></h5>
     <div v-if="showInput" class='add-topic'>
       <input type="text" placeholder="ADD NEW TOPIC" v-model="topicName">
       <button @click="addTopic">add</button>
@@ -13,7 +13,7 @@
           v-if="(topic.title === clickedTopicTitle)"
           @click="topicClicked(topic)"
           :class="{'active': (topic.title === clickedTopicTitle)}" >
-          <span @click=deleteTopic(topic._id)> x </span>{{ topic.title }} - <a href="#">concept map</a>
+          {{ topic.title }} - <a href="#">concept map</a> <span @click=deleteTopic(topic._id)> x </span>
         </div>
         <div v-else
          @click="topicClicked(topic)"
@@ -71,9 +71,6 @@ export default {
 </script>
 
 <style lang="sass" scoped>
-  .topic
-    flex-direction: column
-    flex-basis: 30%
   ul
     list-style: none
     padding-left: 0

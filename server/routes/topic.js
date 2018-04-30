@@ -19,9 +19,12 @@ module.exports = {
    */
   postTopic: (req, res) => {
     const newTopic = new Topic(req.body)
-    newTopic.save(function(error, subject){
+    newTopic.save(function(error, topic){
       if(error) res.send(error)
-      res.send({ success: true, message: 'Topic saved successfully '})
+      res.send({
+        success: true,
+        message: 'Topic saved successfully!',
+        id: topic._id})
     })
   },
 
