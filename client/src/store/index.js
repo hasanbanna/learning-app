@@ -2,9 +2,9 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 import _ from 'lodash'
 
-import SubjectsService from '../services/SubjectsService'
-import TopicsService from '../services/TopicsService'
-import FlashcardsService from '../services/FlashcardsService'
+import SubjectsService from '../../services/SubjectsService'
+import TopicsService from '../../services/TopicsService'
+import FlashcardsService from '../../services/FlashcardsService'
 
 Vue.use(Vuex)
 
@@ -14,7 +14,8 @@ export const store = new Vuex.Store({
     currentSelectedSubject: {},
     currentSelectedSubjectTopics: [],
     currentFlashcardsForSelectedTopic: [],
-    currentSelectedTopic: {}
+    currentSelectedTopic: {},
+    showAddFlashcard: false
   },
   getters: {
     getSubjects (state) {
@@ -31,7 +32,8 @@ export const store = new Vuex.Store({
     },
     getCurrentSelectedTopic (state) {
       return state.currentSelectedTopic
-    }
+    },
+    getShowAddFlashcard: state => state.showAddFlashcard
   },
   mutations: {
     FETCH_SUBJECTS: (state, payload) => {
@@ -58,12 +60,16 @@ export const store = new Vuex.Store({
     DELETE_TOPIC_FOR_CURRENT_SELECTED_SUBJECT: (state, id) => {
       state.currentSelectedSubjectTopics = _.reject(state.currentSelectedSubjectTopics, (topic) => { return topic._id === id })
     },
+    SET_CURRENT_SELECTED_TOPIC: (state, payload) => {
+      state.currentSelectedTopic = payload
+    },
     FETCH_ALL_FLASHCARDS_FOR_TOPIC: (state, payload) => {
       state.currentFlashcardsForSelectedTopic = payload
     },
-    SET_CURRENT_SELECTED_TOPIC: (state, payload) => {
-      state.currentSelectedTopic = payload
-    }
+    DELETE_FLASHCARD: (state, id) => {
+      state.currentFlashcardsForSelectedTopic = _.reject(state.currentFlashcardsForSelectedTopic, (flashcard) => { return flashcard._id === id })
+    },
+    SET_SHOW_ADD_FLASCHARD: (state, bool) => { state.showAddFlashcard = bool }
   },
   actions: {
     async fetchSubjects ({commit}) {
@@ -100,6 +106,13 @@ export const store = new Vuex.Store({
     },
     async setCurrentSelectedTopic ({commit}, payload) {
       commit('SET_CURRENT_SELECTED_TOPIC', payload)
+    },
+    async deleteFlashcard ({commit}, id) {
+      await FlashcardsService.deleteFlashCard(id)
+      commit('DELETE_FLASHCARD', id)
+    },
+    async setShowAddFlashcard ({commit}, bool) {
+      commit('SET_SHOW_ADD_FLASCHARD', bool)
     }
   }
 })

@@ -1,21 +1,22 @@
 <template>
-  <div v-if="showNewFlashCardForm">
-    <button type="button" class="btn btn-primary" @click="addFlashcard">add</button>
-    <button type="button" class="btn btn-primary" @click="showNewFlashCardForm = false">close</button><br>
-    <input type="text" placeholder="QUESTION" id="question" v-model="question"><br>
-    <input type="text" placeholder="ANSWER" id="answer" v-model="answer"><br>
-  </div>
-  <div v-else>
-    <button type="button" class="btn btn-primary" @click="showNewFlashCardForm = true">Add New Flashcard</button>
-  </div>
+  <form @submit.prevent class='d-flex flex-column align-items-stretch '>
+    <div class="row">
+      <input type="text" id="question" name="question" placeholder="Question">
+    </div>
+    <div class="row">
+      <textarea name="answer" id="answer" placeholder="Answer" cols="30" rows="10"></textarea>
+    </div>
+    <div class="row">
+      <button type="button" class="btn btn-success col">add</button>
+      <button type="button" class="btn btn-secondary col" @click="setShowAddFlashcard(false)">cancel</button>
+    </div>
+  </form>
 </template>
 
 <script>
 
-import FlashcardsService from '../../services/FlashcardsService'
-
 export default {
-  name: 'AddFlashCard',
+  name: 'AddFlashcard',
   props: {
     topicId: {
       type: String,
@@ -30,23 +31,31 @@ export default {
     }
   },
   methods: {
-    async addFlashcard () {
-      await FlashcardsService.addFlashcard({
-        question: this.question,
-        answer: this.answer,
-        topic: this.topicId
-      })
-      this.$emit('add_flash_card', {
-        question: this.question,
-        answer: this.answer,
-        topic: this.topicId
-      })
+    // async addFlashcard () {
+    //   await FlashcardsService.addFlashcard({
+    //     question: this.question,
+    //     answer: this.answer,
+    //     topic: this.topicId
+    //   })
+    //   // this.$emit('add_flash_card', {
+    //   //   question: this.question,
+    //   //   answer: this.answer,
+    //   //   topic: this.topicId
+    //   // })
+    // },
+    setShowAddFlashcard (bool) {
+      this.$store.dispatch('setShowAddFlashcard', bool)
     }
+  },
+  computed: {
+
   }
 }
 
 </script>
 
 <style lang="sass">
+  form
+    border: 1px solid black
 
 </style>

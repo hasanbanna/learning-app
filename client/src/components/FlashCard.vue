@@ -9,7 +9,7 @@
       <div class="card-body text-right">
         <!-- <a href="#">show</a> -->
         <a href="#">edit</a>
-        <a href="#">delete</a>
+        <a href="#" @click="deleteFlashcard(flashcard._id)">delete</a>
       </div>
     </div>
   </div>
@@ -37,9 +37,11 @@ export default {
     },
     mouseLeave: function () {
       this.cardHoveredOver = false
+    },
+    deleteFlashcard (id) {
+      this.$store.dispatch('deleteFlashcard', id)
     }
   }
-
 }
 </script>
 
