@@ -6,9 +6,11 @@
       <div class="btn-group btn-group-sm" role="group" aria-label="Action Menu">
         <button type="button" class="btn btn-primary" @click="setShowAddFlashcard(true)">Add New Flashcard</button>
         <button type="button" class="btn btn-secondary" @click="showTestComponent = true">Review Topic</button>
-        <button type="button" class="btn btn-secondary">Review With Related Topics</button>
+        <!-- <button type="button" class="btn btn-secondary">Review With Related Topics</button> -->
       </div>
     </div>
+    <hr>
+    <message></message>
     <div class="d-flex flex-row align-items-start" style="margin-top: 40px">
         <topic class='p-1 col-4'></topic>
         <div class='p-1 col'>
@@ -45,6 +47,7 @@ import Topic from './Topic'
 import Flashcard from './Flashcard'
 import Review from './Review'
 import AddFlashcard from './AddFlashcard'
+import Message from './Message'
 export default {
   name: 'Study',
   data () {
@@ -80,7 +83,8 @@ export default {
     'topic': Topic,
     'flashcard': Flashcard,
     'add-flashcard': AddFlashcard,
-    'review': Review
+    'review': Review,
+    'message': Message
   },
   methods: {
     selectTopic: function (topic) {

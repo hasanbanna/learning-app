@@ -14,26 +14,18 @@ export const store = new Vuex.Store({
     currentSelectedSubject: {},
     currentSelectedSubjectTopics: [],
     currentFlashcardsForSelectedTopic: [],
-    currentSelectedTopic: {},
-    showAddFlashcard: false
+    currentSelectedTopic: {title: 'no title'},
+    showAddFlashcard: false,
+    messages: []
   },
   getters: {
-    getSubjects (state) {
-      return state.subjects
-    },
-    getCurrentSelectedSubject (state) {
-      return state.currentSelectedSubject
-    },
-    getCurrentSelectedSubjectTopics (state) {
-      return state.currentSelectedSubjectTopics
-    },
-    getCurrentFlashcardsForSelectedTopic (state) {
-      return state.currentFlashcardsForSelectedTopic
-    },
-    getCurrentSelectedTopic (state) {
-      return state.currentSelectedTopic
-    },
-    getShowAddFlashcard: state => state.showAddFlashcard
+    getSubjects: state => state.subjects,
+    getCurrentSelectedSubject: state => state.currentSelectedSubject,
+    getCurrentSelectedSubjectTopics: state => state.currentSelectedSubjectTopics,
+    getCurrentFlashcardsForSelectedTopic: state => state.currentFlashcardsForSelectedTopic,
+    getCurrentSelectedTopic: state => state.currentSelectedTopic,
+    getShowAddFlashcard: state => state.showAddFlashcard,
+    getMessages: state => state.messages
   },
   mutations: {
     FETCH_SUBJECTS: (state, payload) => {
@@ -41,9 +33,7 @@ export const store = new Vuex.Store({
         return _.pick(subject, ['_id', 'title'])
       })
     },
-    ADD_SUBJECT: (state, payload) => {
-      state.subjects.push(payload)
-    },
+    ADD_SUBJECT: (state, payload) => state.subjects.push(payload),
     DELETE_SUBJECT: (state, title) => {
       state.subjects = _.reject(state.subjects, (subject) => { return subject.title === title })
     },
@@ -69,7 +59,10 @@ export const store = new Vuex.Store({
     DELETE_FLASHCARD: (state, id) => {
       state.currentFlashcardsForSelectedTopic = _.reject(state.currentFlashcardsForSelectedTopic, (flashcard) => { return flashcard._id === id })
     },
-    SET_SHOW_ADD_FLASCHARD: (state, bool) => { state.showAddFlashcard = bool }
+    SET_SHOW_ADD_FLASCHARD: (state, bool) => { state.showAddFlashcard = bool },
+    ADD_FLASHCARD: (state, payload) => {
+      state.currentFlashcardsForSelectedTopic.push(payload)
+    }
   },
   actions: {
     async fetchSubjects ({commit}) {
@@ -107,12 +100,26 @@ export const store = new Vuex.Store({
     async setCurrentSelectedTopic ({commit}, payload) {
       commit('SET_CURRENT_SELECTED_TOPIC', payload)
     },
-    async deleteFlashcard ({commit}, id) {
+    async deleteFlashcard ({commit, state}, id) {
       await FlashcardsService.deleteFlashCard(id)
+      state.messages.push('Flashcard deleted!')
       commit('DELETE_FLASHCARD', id)
     },
     async setShowAddFlashcard ({commit}, bool) {
       commit('SET_SHOW_ADD_FLASCHARD', bool)
+    },
+    async addFlashcard ({commit, state}, payload) {
+      const response = await FlashcardsService.addFlashcard({
+        question: payload.question,
+        answer: payload.answer,
+        topic: payload.topicId
+      })
+      state.messages.push('Flashcard added!')
+      payload['_id'] = response.data.id
+      commit('ADD_FLASHCARD', {
+        question: payload.question,
+        answer: payload.answer
+      })
     }
   }
 })

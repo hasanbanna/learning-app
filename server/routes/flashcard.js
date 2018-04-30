@@ -20,7 +20,11 @@ module.exports = {
    const newFlashCard = new FlashCard(req.body)
    newFlashCard.save((error, flashcard) => {
       if(error) res.send(error)
-      res.send({ success: true, message: 'Flashcard saved successfully'})
+      res.send({
+        success: true,
+        message: 'Flashcard saved successfully',
+        id: flashcard._id
+      })
    })
  },
 
