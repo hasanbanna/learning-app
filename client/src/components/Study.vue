@@ -5,7 +5,7 @@
       <h4 class="subject-title">{{ subjectTitle }}</h4>
       <div class="btn-group btn-group-sm" role="group" aria-label="Action Menu">
         <button type="button" class="btn btn-primary" @click="setShowAddFlashcard(true)">Add New Flashcard</button>
-        <button type="button" class="btn btn-secondary" @click="showTestComponent = true">Review Topic</button>
+        <button type="button" class="btn btn-secondary" @click="setShowMainReview(true)">Review Topic</button>
         <!-- <button type="button" class="btn btn-secondary">Review With Related Topics</button> -->
       </div>
     </div>
@@ -17,6 +17,10 @@
           <div v-if="showAddFlashcard">
             <add-flashcard ></add-flashcard>
           </div>
+          <div v-else-if="showMainReview">
+            <main-review></main-review>
+          </div>
+          <!-- this can be shortened -->
           <div v-else>
             <div v-if="currentSelectedTopic.title">
               <div v-if="flashcards.length > 0" class="card-deck">
@@ -48,6 +52,8 @@ import Flashcard from './Flashcard'
 import Review from './Review'
 import AddFlashcard from './AddFlashcard'
 import Message from './Message'
+import MainReview from './MainReview'
+
 export default {
   name: 'Study',
   data () {
@@ -77,6 +83,9 @@ export default {
     },
     showAddFlashcard () {
       return this.$store.getters.getShowAddFlashcard
+    },
+    showMainReview () {
+      return this.$store.getters.getShowMainReview
     }
   },
   components: {
@@ -84,14 +93,20 @@ export default {
     'flashcard': Flashcard,
     'add-flashcard': AddFlashcard,
     'review': Review,
-    'message': Message
+    'message': Message,
+    'main-review': MainReview
   },
   methods: {
     selectTopic: function (topic) {
       this.selectedTopic = topic
     },
     setShowAddFlashcard (bool) {
+      this.$store.dispatch('setShowMainReview', false)
       this.$store.dispatch('setShowAddFlashcard', bool)
+    },
+    setShowMainReview (bool) {
+      this.$store.dispatch('setShowAddFlashcard', false)
+      this.$store.dispatch('setShowMainReview', bool)
     }
   }
 }

@@ -16,6 +16,7 @@ export const store = new Vuex.Store({
     currentFlashcardsForSelectedTopic: [],
     currentSelectedTopic: {title: 'no title'},
     showAddFlashcard: false,
+    showMainReview: false,
     messages: []
   },
   getters: {
@@ -25,6 +26,7 @@ export const store = new Vuex.Store({
     getCurrentFlashcardsForSelectedTopic: state => state.currentFlashcardsForSelectedTopic,
     getCurrentSelectedTopic: state => state.currentSelectedTopic,
     getShowAddFlashcard: state => state.showAddFlashcard,
+    getShowMainReview: state => state.showMainReview,
     getMessages: state => state.messages
   },
   mutations: {
@@ -62,7 +64,8 @@ export const store = new Vuex.Store({
     SET_SHOW_ADD_FLASCHARD: (state, bool) => { state.showAddFlashcard = bool },
     ADD_FLASHCARD: (state, payload) => {
       state.currentFlashcardsForSelectedTopic.push(payload)
-    }
+    },
+    SET_SHOW_MAIN_REVIEW: (state, bool) => { state.showMainReview = bool }
   },
   actions: {
     async fetchSubjects ({commit}) {
@@ -120,6 +123,9 @@ export const store = new Vuex.Store({
         question: payload.question,
         answer: payload.answer
       })
+    },
+    async setShowMainReview ({commit}, bool) {
+      commit('SET_SHOW_MAIN_REVIEW', bool)
     }
   }
 })

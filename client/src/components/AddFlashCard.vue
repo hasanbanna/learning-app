@@ -59,7 +59,7 @@ export default {
   textarea
     outline: none
     padding: 5px
-    border: 1px solid rgba(100,100,100,0.5) 
+    border: 1px solid rgba(100,100,100,0.5)
     border-radius: 3px
 .button-container
   display: flex
@@ -67,5 +67,4 @@ export default {
   button
     margin: 15px 0px 0 5px
     font-weight: bold
-    
 </style>

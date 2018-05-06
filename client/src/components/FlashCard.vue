@@ -8,7 +8,7 @@
       </h4>
       <div class="card-body text-right">
         <!-- <a href="#">show</a> -->
-        <a href="#">edit</a>
+        <!-- <a href="#">edit</a> -->
         <a href="#" @click="deleteFlashcard(flashcard._id)">delete</a>
       </div>
     </div>
