@@ -12,7 +12,9 @@
     <hr>
     <message></message>
     <div class="d-flex flex-row align-items-start" style="margin-top: 40px">
+
         <topic class='p-1 col-4'></topic>
+
         <div class='p-1 col'>
           <div v-if="showAddFlashcard">
             <add-flashcard ></add-flashcard>
